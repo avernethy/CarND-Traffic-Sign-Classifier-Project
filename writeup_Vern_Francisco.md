@@ -168,7 +168,7 @@ Here are the results of the prediction:
 | Vehicles over 3.5 tons| Vehicles over 3.5 metric tons prohibited     	|
 
 
-The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This compares favorably to the accuracy on the test set of 
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is in contrast to the test set accuracy of 93.7%
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
