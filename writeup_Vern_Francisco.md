@@ -28,6 +28,10 @@ The goals / steps of this project are the following:
 [image7]: ./examples/stop.jpg "Traffic Sign 4"
 [image8]: ./examples/truck.jpg "Traffic Sign 5"
 [image9]: ./examples/SoftMax_Probs.png "SoftMax Probabilities"
+[imange10]: ./examples/normal_image.png "Color"
+[imange11]: ./examples/gray_image.png "Gray"
+[imange12]: ./examples/norm_gray_image.png "Normalized Gray"
+[imange13]: ./examples/rotate_norm_gray_image.png "Normalized Gray"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -75,6 +79,9 @@ Going back to the paper, it seem rotation and squashing were the best preprocess
 The result of adding the two random rotations was that the validation accuracy went up to about a 0.95 level.  I tried running the augmentation a few times to see how the random rotations affected the validation accuracy.  There was some fluctuation but none dipped below the 0.93 mark.
 
 I was also planning to implement the squash but has spent too much time with testing the rotation, so settled on my 0.95 result and decided to move on to the model architecture
+
+Example of an 'underrepresented' image
+![alt text][image10]![alt text][image11]![alt text][image12]![alt text][image13]
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
