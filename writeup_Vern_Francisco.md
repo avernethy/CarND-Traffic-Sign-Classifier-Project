@@ -81,7 +81,7 @@ The result of adding the two random rotations was that the validation accuracy w
 I was also planning to implement the squash but has spent too much time with testing the rotation, so settled on my 0.95 result and decided to move on to the model architecture
 
 Example of an 'underrepresented' image: Normal -> Gray -> Normalized Gray -> Rotatation
-![alt text][image10]![alt text][image11]![alt text][image12]![alt text][image13]
+![alt text][image10]
 
 
 
