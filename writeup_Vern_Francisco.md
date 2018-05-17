@@ -28,10 +28,10 @@ The goals / steps of this project are the following:
 [image7]: ./examples/stop.jpg "Traffic Sign 4"
 [image8]: ./examples/truck.jpg "Traffic Sign 5"
 [image9]: ./examples/SoftMax_Probs.png "SoftMax Probabilities"
-[imange10]: ./examples/normal_image.png "Color"
-[imange11]: ./examples/gray_image.png "Gray"
-[imange12]: ./examples/norm_gray_image.png "Normalized Gray"
-[imange13]: ./examples/rotate_norm_gray_image.png "Normalized Gray"
+[image10]: ./examples/normal_image.png "Color"
+[image11]: ./examples/gray_image.png "Gray"
+[image12]: ./examples/norm_gray_image.png "Normalized Gray"
+[image13]: ./examples/rotate_norm_gray_image.png "Normalized Gray"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -80,8 +80,8 @@ The result of adding the two random rotations was that the validation accuracy w
 
 I was also planning to implement the squash but has spent too much time with testing the rotation, so settled on my 0.95 result and decided to move on to the model architecture
 
-Example of an 'underrepresented' image
-
+Example of an 'underrepresented' image: Normal -> Gray -> Normalized Gray -> Rotatation
+![alt text][image10]![alt text][image11]![alt text][image12]![alt text][image13]
 
 
 
@@ -192,5 +192,5 @@ The speed limit and 3.5 metric ton vehicle signs had very high probability while
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
-![alt text][image10]
+
 
