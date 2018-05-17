@@ -86,6 +86,7 @@ Example of an 'underrepresented' image
 ![alt text][image12]
 ![alt text][image13]
 
+
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
 My final model consisted of the following layers:
