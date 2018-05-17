@@ -81,7 +81,7 @@ The result of adding the two random rotations was that the validation accuracy w
 I was also planning to implement the squash but has spent too much time with testing the rotation, so settled on my 0.95 result and decided to move on to the model architecture
 
 Example of an 'underrepresented' image
-![alt text][image10]
+
 
 
 
@@ -192,5 +192,5 @@ The speed limit and 3.5 metric ton vehicle signs had very high probability while
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
-
+![alt text][image10]
 
