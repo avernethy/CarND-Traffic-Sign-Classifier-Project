@@ -82,9 +82,7 @@ I was also planning to implement the squash but has spent too much time with tes
 
 Example of an 'underrepresented' image
 ![alt text][image10]
-![alt text][image11]
-![alt text][image12]
-![alt text][image13]
+
 
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
