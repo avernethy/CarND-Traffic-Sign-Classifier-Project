@@ -19,15 +19,15 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/vf_visualization_data_augmented.jpg "Visualization"
+[image1]: ./examples/vf_visualization_data_augmented.png "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/vf_visualization_data_original.jpg "Augmented with rotation"
+[image3]: ./examples/vf_visualization_data_original.png "Augmented with rotation"
 [image4]: ./examples/family_crossing.jpg "Traffic Sign 1"
 [image5]: ./examples/right_turn.jpg "Traffic Sign 2"
 [image6]: ./examples/speed_30.jpg "Traffic Sign 3"
 [image7]: ./examples/stop.jpg "Traffic Sign 4"
 [image8]: ./examples/truck.jpg "Traffic Sign 5"
-[image9]: ./examples/SoftMax_Probs.jpg "SoftMax Probabilities"
+[image9]: ./examples/SoftMax_Probs.png "SoftMax Probabilities"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
