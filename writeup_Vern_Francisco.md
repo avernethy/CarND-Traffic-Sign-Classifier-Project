@@ -19,14 +19,22 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
+[image1]: ./examples/vf_visualization_data_augmented.png "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[image3]: ./examples/vf_visualization_data_original.png "Augmented with rotation"
+[image4]: ./examples/family_crossing.jpg "Traffic Sign 1"
+[image5]: ./examples/right_turn.jpg "Traffic Sign 2"
+[image6]: ./examples/speed_30.jpg "Traffic Sign 3"
+[image7]: ./examples/stop.jpg "Traffic Sign 4"
+[image8]: ./examples/truck.jpg "Traffic Sign 5"
+[image9]: ./examples/SoftMax_Probs.png "SoftMax Probabilities"
+[image10]: ./examples/normal_image.png "Color"
+[image11]: ./examples/gray_image.png "Gray"
+[image12]: ./examples/norm_gray_image.png "Normalized Gray"
+[image13]: ./examples/rotate_norm_gray_image.png "Normalized Gray"
+[image14]: ./examples/precision.png "Precision"
+[image15]: ./examples/recall.png "Recall"
+[image16]: ./examples/conv2D_1.png "conv2D_1"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -34,26 +42,26 @@ The goals / steps of this project are the following:
 ---
 ### Writeup / README
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. 
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/avernethy/CarND-Traffic-Sign-Classifier-Project/tree/develop/Traffic_Sign_Classifier.ipynb)
 
 ### Data Set Summary & Exploration
 
 #### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-I used the pandas library to calculate summary statistics of the traffic
+I used the python library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is ?
-* The size of the validation set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+* The size of training set is 34799
+* The size of the validation set is 4410
+* The size of test set is 12630
+* The shape of a traffic sign image is (32x32x3)
+* The number of unique classes/labels in the data set is 43
 
 #### 2. Include an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set. It is a bar chart showing how the data frequency
 
 ![alt text][image1]
 
@@ -61,23 +69,23 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-As a first step, I decided to convert the images to grayscale because ...
+As a first step, I ran the base classifier directly from the LeNet solution to understand the starting point before making any changes.  Before I could do this I had to run the minimum normalization since it is required for the model to run.  I started playing with the EPOCH, batch sizes, and rates to see how far I could stretch the most basic model and achieved a 0.937 validation with an EPOCH of 10, batch size 64, and rate of 0.002.  Feeling relieved that I could at least make the minimum validation accuracy, I started exploring additional steps.
 
-Here is an example of a traffic sign image before and after grayscaling.
+I then decided to convert the images to grayscale after reading the paper in the link provided in the project for "Traffic Sign Recognition with Mult-Scale Convolutional Networks.  I used a simple cv2 transformation using RGB2GRAY and the validation accuracy went down to about 0.923.  Seems like it went down, so I did a param sweep with EPOCHS, batch sizes and rates just to see if grayscaling had an effect.  It did not have a big effect and I ended up settling for the same parameters.
 
-![alt text][image2]
+After doing more reading about other solutions, I came upon using cv2.equalizeHist from an Udacity blog (cited the code).  I decided to try it and achieved about 0.93 validation accuracy reliably.
 
-As a last step, I normalized the image data because ...
-
-I decided to generate additional data because ... 
-
-To add more data to the the data set, I used the following techniques because ... 
-
-Here is an example of an original image and an augmented image:
+Going back to the paper, it seem rotation and squashing were the best preprocessing for the images.  I decided to try rotation but after some experimentation, went with using a two random rotations ranging -5 to +5 degrees of rotation per image that I determined was underrepresented in the data set. I used an arbitrary cut off of 500 images in a class to determine representation. I then augmented the data so that the rotated images boosted the counts where there was enough data. Here is a histogram of the augmented data set:
 
 ![alt text][image3]
 
-The difference between the original data set and the augmented data set is the following ... 
+The result of adding the two random rotations was that the validation accuracy went up to about a 0.95 level.  I tried running the augmentation a few times to see how the random rotations affected the validation accuracy.  There was some fluctuation but none dipped below the 0.93 mark.
+
+I was also planning to implement the squash but has spent too much time with testing the rotation, so settled on my 0.95 result and decided to move on to the model architecture
+
+Example of an 'underrepresented' image: Normal -> Gray -> Normalized Gray -> Rotatation
+![alt text][image10]
+
 
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
@@ -87,27 +95,38 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 28x28x6 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 24x24x10 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 12x12x10 				|
+| Convolution 5x5	    | 1x1 stride, VALID padding, outputs 8x8x28 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 4x4x28 					|
+| Fully Connected		|Input 448, output 240							|
+| RELU					|												|
+| dropout				|Training keep rate= 0.5						|
+| Fully Connected		|Input 240, output 84							|
+| RELU					|												|
+| dropout				|Training keep rate= 0.5						|
+| Fully Connected		|Input 84, output 43							|
+| RELU					|												|
 | Softmax				| etc.        									|
 |						|												|
 |						|												|
- 
+
 
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-To train the model, I used an ....
+To train the model, I used the AdamOptimer as came on the LeNet solution.  As far as the batch size, epochs, and learning rate, I periodically tested different ones as I was modifying the model as described in the section below.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 0.960
+* validation set accuracy of 0.990
+* test set accuracy of 60% on the five images
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -120,7 +139,15 @@ If a well known architecture was chosen:
 * What architecture was chosen?
 * Why did you believe it would be relevant to the traffic sign application?
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+
+Itertive Solution I Took:
+ I started with the basic LeNet Classifier.  Since this is the first time I have played with a ConvNets I took it one modification at a time to see the effect of different stages.
  
+ The first thing I did was add the dropouts.  First, on the fully connected layer before the logits and the the layer above. Using a fresh rotation, grayscaled, normalized set, the validation accuracy was 0.946, moved to 0.950 after the first dropout was added, and again to 0.948.  However, I noticed that the training accuracy had gone down from about 0.99 to 0.98 or lower which I thought meant the model might be less susceptible to overfitting.
+ 
+Next I wanted to try to play with the depth of the model since I saw in the lecture that adding more layers and getting the model to be more deep could improve accuracy.  I started with playing with the fully connected layers and settled changing the 2nd fully connected layer from the default of 120 to 240. This yielded a validation accuracy of 0.957.  Slight improvement so I decided to try adding another convolution layer.  I also tried different EPOCHS, rate and batch size.  I found that EPOCHS = 10, rate = 0.001 and batch size had decreased the training time but not affected the validation accuracy much so stuck with those values
+
+Finally I decided to add a convolution layer (output 24x24x10). Again, the goal was to have the model become more deep but keep the training parameters to be close the original.  Originally, the first fully connected layer had an input of 400 but after choosing the padding style, and number of filters, I ended up with an input of 448 for the first fully connected layer.  This yielded a validation 0.978.  However, I noticed that the validation accuracy was not changing much after 5 EPOCHS so I also decreased the number of EPOCHS from 10 to 5.  This hurt a little in validation accuracy 0.97 to 0.96 but the training accuracy had also come down a bit, so again I figured this would help with the chances of overfitting.
 
 ### Test a Model on New Images
 
@@ -131,7 +158,7 @@ Here are five German traffic signs that I found on the web:
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
-The first image might be difficult to classify because ...
+The first image, Children Crossing, might be difficult to classify because the image of the two people crossing could be lost in the downsampling.  The second image, Turn Right Ahead, may be hard to classify since the background color of the sign closely matches the color of the sky, and the shape of the arrow might get missclassified.  The third image, 30km/hr, might have difficulty with the number 3 and 8.  The fourth image, Stop, may be difficult because of the angle at which the photo is taken.  The fifth, Vehicles Over 3.5 Metric Tons Prohibited, image may have trouble because of the truck shape.  
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -139,14 +166,14 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Children crossing  	| Children crossing				  		 		| 
+| Turn right ahead  	| Ahead only        							|
+| Speed limit (30km/h)	| Speed limit (30km/h)					 		|
+| Stop					| Priority road									|
+| Vehicles over 3.5 tons| Vehicles over 3.5 metric tons prohibited     	|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is in contrast to the test set accuracy of 93.7%
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
@@ -156,16 +183,28 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| .47, .33, .17 .016, .0025   			| Children crossing				| 
+| .56, .43, .0037, .00018, .000051     	| Ahead only					|
+| .89, .057, .051, .0041, .00058| Speed limit (30km/h)							|
+| .54, .31, .04, .025, .02| Priority road					 				|
+| .92, .023, 0.019, 0.017, 0.0066    | Vehicles over 3.5 metrics tons prohibited		|
 
+![alt text][image9]
 
-For the second image ... 
+The speed limit and 3.5 metric ton vehicle signs had very high probability while the other three images were only a roughly 50/50 chance of being correct. It is surprising that the Children crossing was predicted correctly given the probability was less than 50% but the model was roughtly 14% more sure that it was correct over the next classification.  In comparison, the gap for Stop was larger, 23% but the classifier got it wrong.  For the high probability signs, Speed Limit and 3.5 Ton Vehicle, the gap to the next best guess was quite large. 
+
+Looking at the Precision and Recall, the following graphs show the performance of the model. The Precision, or ratio of correct classifications to predictions of a given class, of the model is somewhat high, >80% for many of the classes except image 27, Pedestrians.  This class also had among the lowest number of training samples and could contribute to the low Precision of the model.  Adding more augmentations to this class may bring up the Precision.  The high number of false positives may indicate that this sign also looks similar to other signs.  This would mean that not enough distinguishing features are detected
+
+Further looking at the Recall of the model, or ratio of correct classifications to total number in a given class, three classes stand out.  They are 21-Bumpy Curve, 27-Pedestrians, and 30-Beware of Ice/Snow. For these images, the model has trouble identifying the signs correctly when the images appear.
+
+27-Pedestrians shows up as a low performer in both metrics so there may more more work to be done in improving the model to identify these images. Perhaps, a change to the model architecture could help with identifying more distinguishing features, while augmenting the data or finding more images could help with the recall.
+![alt text][image14]
+![alt text][image15]
+
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+I plotted one of the feature maps, at Conv2D_1, which looks like it's Layer 2, just before the activation and the circular feature with the truck image almost being apparent is showing through.  This seems to be in line with the high probability with which the 3.5 metric ton sign is classified with test image.
 
+![alt text][image16]
