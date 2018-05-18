@@ -32,6 +32,9 @@ The goals / steps of this project are the following:
 [image11]: ./examples/gray_image.png "Gray"
 [image12]: ./examples/norm_gray_image.png "Normalized Gray"
 [image13]: ./examples/rotate_norm_gray_image.png "Normalized Gray"
+[image14]: ./examples/precision.png "Precision"
+[image15]: ./examples/recall.png "Recall"
+[image16]: ./examples/conv2D_1.png "conv2D_1"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -97,9 +100,9 @@ My final model consisted of the following layers:
 | Convolution 5x5     	| 1x1 stride, VALID padding, outputs 24x24x10 	|
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 12x12x10 				|
-| Convolution 5x5	    | 1x1 stride, VALID padding, outputs 8x8x24 	|
+| Convolution 5x5	    | 1x1 stride, VALID padding, outputs 8x8x28 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 4x4x24 					|
+| Max pooling	      	| 2x2 stride,  outputs 4x4x28 					|
 | Fully Connected		|Input 448, output 240							|
 | RELU					|												|
 | dropout				|Training keep rate= 0.5						|
@@ -155,7 +158,7 @@ Here are five German traffic signs that I found on the web:
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
-The first image, Children Crossing, might be difficult to classify because the image of the two people crossing could be lost in the downsampling.  The second image, Turn Right Ahead, may be hard to classify since the background color of the sign closely matches the color of the sky, and the shape of the arrow might get missclassified.  The third image, 30km/hr, might have difficulty with the number 3 and 8.  The fourth image, Stop, may be difficult because of the angle at which the photo is taken.  The fifth, Vehicles Over 3.5 Metric Tons Prohibited, image may have trouble because of the truck shape
+The first image, Children Crossing, might be difficult to classify because the image of the two people crossing could be lost in the downsampling.  The second image, Turn Right Ahead, may be hard to classify since the background color of the sign closely matches the color of the sky, and the shape of the arrow might get missclassified.  The third image, 30km/hr, might have difficulty with the number 3 and 8.  The fourth image, Stop, may be difficult because of the angle at which the photo is taken.  The fifth, Vehicles Over 3.5 Metric Tons Prohibited, image may have trouble because of the truck shape.  
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -180,17 +183,28 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .47         			| Children crossing								| 
-| .56     				| Ahead only        							|
-| .89					| Speed limit (30km/h)							|
-| .54	      			| Priority road					 				|
-| .92				    | Vehicles over 3.5 metrics tons prohibited		|
+| .47, .33, .17 .016, .0025   			| Children crossing				| 
+| .56, .43, .0037, .00018, .000051     	| Ahead only					|
+| .89, .057, .051, .0041, .00058| Speed limit (30km/h)							|
+| .54, .31, .04, .025, .02| Priority road					 				|
+| .92, .023, 0.019, 0.017, 0.0066    | Vehicles over 3.5 metrics tons prohibited		|
 
 ![alt text][image9]
 
-The speed limit and 3.5 metric ton vehicle signs had very high probability while the other three images were only a roughly 50/50 chance of being correct. It is surprising that the Children crossing was predicted correctly given the probability was less than 50%. 
+The speed limit and 3.5 metric ton vehicle signs had very high probability while the other three images were only a roughly 50/50 chance of being correct. It is surprising that the Children crossing was predicted correctly given the probability was less than 50% but the model was roughtly 14% more sure that it was correct over the next classification.  In comparison, the gap for Stop was larger, 23% but the classifier got it wrong.  For the high probability signs, Speed Limit and 3.5 Ton Vehicle, the gap to the next best guess was quite large. 
+
+Looking at the Precision and Recall, the following graphs show the performance of the model. The Precision, or ratio of correct classifications to predictions of a given class, of the model is somewhat high, >80% for many of the classes except image 27, Pedestrians.  This class also had among the lowest number of training samples and could contribute to the low Precision of the model.  Adding more augmentations to this class may bring up the Precision.  The high number of false positives may indicate that this sign also looks similar to other signs.  This would mean that not enough distinguishing features are detected
+
+Further looking at the Recall of the model, or ratio of correct classifications to total number in a given class, three classes stand out.  They are 21-Bumpy Curve, 27-Pedestrians, and 30-Beware of Ice/Snow. For these images, the model has trouble identifying the signs correctly when the images appear.
+
+27-Pedestrians shows up as a low performer in both metrics so there may more more work to be done in improving the model to identify these images. Perhaps, a change to the model architecture could help with identifying more distinguishing features, while augmenting the data or finding more images could help with the recall.
+![alt text][image14]
+![alt text][image15]
+
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+I plotted one of the feature maps, at Conv2D_1, which looks like it's Layer 2, just before the activation and the circular feature with the truck image almost being apparent is showing through.  This seems to be in line with the high probability with which the 3.5 metric ton sign is classified with test image.
 
+![alt text][image16]
